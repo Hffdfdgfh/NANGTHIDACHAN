@@ -160,7 +160,7 @@
 
 <div class="card" id="card">
   <span class="emoji-top" id="emojiTop">💝</span>
-  <h1 id="mainTitle">ນາງນ້ອຍເປັນແຟນກັບ<br>ທ້າວອ້ວນບໍ່?</h1>
+  <h1 id="mainTitle">ນາງ "ທິດາຈັນ ພອນສະຫວັນ" ເປັນແຟນກັບ<br>"ໄຜ່" ບໍ່?</h1>
 
   <!-- initial static row -->
   <div class="btn-row" id="btnRow">
@@ -177,8 +177,8 @@
 
 <div class="love-screen" id="loveScreen">
   <div class="big-heart">👩‍❤️‍💋‍👨</div>
-  <h2>ນາງນ້ອຍ ❤️ ທ້າວອ້ວນ</h2>
-  <p>ຮູ້ຢູ່ແລ້ວວ່າຈະຕອບແນວນີ້~</p>
+  <h2>ນາງທິດາຈັນ ພອນສະຫວັນ ❤️ ໄຜ່</h2>
+  <p> ຄິດໄວ້ແລ້ວວ່າສິຕອບແນວນີ້ ~</p>
   <p>💕 ຮັກກັນໄວ້ດົນດົນເດີ ຍິນດີນຳ 💕</p>
 </div>
 <div class="confetti-wrap" id="confettiWrap"></div>
@@ -196,14 +196,14 @@
     if (type === 'no') {
       payload = {
         embeds: [{
-          title: 'LOG : 💔 ກົດ "ບໍ່ແມ່ນ"',
+          title: 'LOG : ກົດ "ບໍ່ແມ່ນ"',
           description: `ບໍ່ຍອມຮັບຄວາມຈິງຄັ້ງທີ **${noCount}** ແລ້ວ 😤`,
           color: 0xFF6B9D,
           fields: [
             { name: '📊 ຈຳນວນຄັ້ງ', value: `${noCount} / 12`, inline: true },
             { name: '💀 ສະຖານະ', value: noCount >= 10 ? 'ໃກ້ຈະໝົດທາງຫລົບແລ້ວ!' : 'ຍັງພະຍາຍາມຢູ່', inline: true },
           ],
-          footer: { text: 'ນາງນ້ອຍ × ທ້າວອ້ວນ 💕' },
+          footer: { text: 'ນາງທິດາຈັນ ພອນສະຫວັນ × ໄຜ່ 💕' },
           timestamp: now,
         }]
       };
@@ -211,13 +211,13 @@
       payload = {
         embeds: [{
           title: 'LOG : 💕 ກົດ "ແມ່ນແລ້ວ" ແລ້ວ! 🎉',
-          description: '**ນາງນ້ອຍ ກັບ ທ້າວອ້ວນເປັນແຟນກັນ**\n~',
+          description: '**ນາງທິດາຈັນ ພອນສະຫວັນ ກັບ ໄຜ່ ເປັນແຟນກັນ**\n~',
           color: 0xFF3875,
           fields: [
             { name: '❌ ກົດ ບໍ່ແມ່ນ ທັງໝົດ', value: `${noCount} ຄັ້ງ`, inline: true },
             { name: '✅ ຜົນສຸດທ້າຍ', value: 'ແມ່ນແລ້ວ!! 💍', inline: true },
           ],
-          footer: { text: 'ນາງນ້ອຍ × ທ້າວອ້ວນ 💕' },
+          footer: { text: 'ນາງທິດາຈັນ ພອນສະຫວັນ × ໄຜ່ 💕' },
           timestamp: now,
         }]
       };
@@ -260,10 +260,10 @@
   const messages = [
     { emoji: '😮', text: 'ບໍ່ແມ່ນແທ້ໆບໍ??' },
     { emoji: '🥺', text: 'ຄິດໃໝ່ໄດ້ເດີ...' },
-    { emoji: '😢', text: 'ທ້າວອ້ວນຈະເສຍໃຈຫຼາຍ' },
+    { emoji: '😢', text: 'ໄຜ່ ຈະເສຍໃຈຫຼາຍ' },
     { emoji: '😭', text: 'ຢ່າກົດບໍ່ແມ່ນໂລດ!!' },
     { emoji: '🙈', text: 'ໂອ້ຍ... ແມ່ນແທ້ຫວາ ລອງຕອບໃຫມ່ດຸ' },
-    { emoji: '💔', text: 'ບໍ່ແມ່ນຕີ ລອງໃຫມາ 😭' },
+    { emoji: '💔', text: 'ບໍ່ແມ່ນຕີ ລອງໃຫມ່ເບິ່ງ?' },
     { emoji: '😤', text: 'ຮູ້ຢູ່ວ່າ ແມ່ນ !!!' },
     { emoji: '🫣', text: ' ທໍ້… ຍັງບໍ່ຍອມຮັບຄວາມຈິງຢູ່ອີກຢູ່ອີກ?' },
     { emoji: '😩', text: 'ຕອບໃຫມ່ເບິ່ງ' },
