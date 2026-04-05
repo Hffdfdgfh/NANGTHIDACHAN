@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ກະລຸນາເປີດ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao+Looped:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ffecd2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Sans Lao Looped', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .heart-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .heart-particle {
+    position: absolute;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0.8; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0;   }
+  }
+
+  .card {
+    position: relative;
+    z-index: 10;
+    background: rgba(255,255,255,0.90);
+    backdrop-filter: blur(20px);
+    border-radius: 32px;
+    padding: 56px 44px 52px;
+    box-shadow: 0 20px 60px rgba(255,100,130,0.3), 0 0 0 1px rgba(255,255,255,0.6) inset;
+    text-align: center;
+    max-width: 480px;
+    width: 92%;
+    animation: cardPop 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+  }
+  @keyframes cardPop {
+    0%   { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1);   opacity: 1; }
+  }
+
+  .emoji-top {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 14px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0);     }
+    50%      { transform: translateY(-12px); }
+  }
+
+  h1 {
+    font-size: 1.85rem;
+    font-weight: 900;
+    color: #c0366a;
+    line-height: 1.5;
+    margin-bottom: 40px;
+    text-shadow: 0 2px 8px rgba(192,54,106,0.12);
+    transition: opacity 0.2s ease;
+  }
+
+  /* ── static row shown first ── */
+  .btn-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ── arena (hidden, used after first escape) ── */
+  .btn-area {
+    display: none;
+    position: relative;
+    width: 100%;
+    height: 170px;
+  }
+
+  /* shared button base */
+  .btn-yes, .btn-no { font-family: 'Noto Sans Lao Looped', sans-serif; cursor: pointer; border: none; border-radius: 50px; white-space: nowrap; }
+
+  .btn-yes {
+    background: linear-gradient(135deg,#ff6b9d,#ff3875);
+    color: white;
+    padding: 15px 38px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(255,56,117,0.45);
+    transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.2s;
+  }
+  .btn-yes:hover { box-shadow: 0 12px 32px rgba(255,56,117,0.6); }
+
+  /* NO — clearly visible dark outline style */
+  .btn-no {
+    background: #fff;
+    color: #c0366a;
+    border: 2.5px solid #e8698a;
+    padding: 13px 28px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    transition: background 0.2s, opacity 0.3s;
+  }
+  .btn-no:hover { background: #fff0f4; }
+
+  /* arena versions (absolute) */
+  .btn-area .btn-yes {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%,-50%) scale(1);
+    transform-origin: center center;
+    z-index: 2;
+  }
+  .btn-area .btn-no {
+    position: absolute;
+    z-index: 3;
+    /* default spot: bottom-right */
+    right: 8px; bottom: 8px;
+  }
+
+  /* ── love screen ── */
+  .love-screen {
+    display: none;
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg,#ff6b9d,#ff3875,#c0366a);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 32px;
+  }
+  .love-screen.active { display: flex; animation: loveIn 0.5s ease forwards; }
+  @keyframes loveIn {
+    0%   { opacity: 0; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1);    }
+  }
+  .big-heart { font-size: 7rem; animation: heartPulse 1s ease-in-out infinite; margin-bottom: 20px; }
+  @keyframes heartPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+  .love-screen h2 { font-size: 2.2rem; font-weight:900; color:#fff; text-shadow:0 4px 20px rgba(0,0,0,0.15); margin-bottom:14px; line-height:1.4; }
+  .love-screen p  { font-size:1.1rem; color:rgba(255,255,255,0.92); margin-bottom:8px; line-height:1.6; }
+
+  .confetti-wrap { position:fixed; inset:0; pointer-events:none; z-index:101; }
+  .confetti-piece { position:absolute; animation:confettiFall linear forwards; opacity:0; }
+  @keyframes confettiFall {
+    0%   { transform:translateY(-50px) rotate(0deg);   opacity:1;   }
+    100% { transform:translateY(110vh) rotate(720deg); opacity:0.2; }
+  }
+</style>
+</head>
+<body>
+
+<div class="heart-bg" id="heartBg"></div>
+
+<div class="card" id="card">
+  <span class="emoji-top" id="emojiTop">💝</span>
+  <h1 id="mainTitle">ນາງນ້ອຍເປັນແຟນກັບ<br>ທ້າວອ້ວນບໍ່?</h1>
+
+  <!-- initial static row -->
+  <div class="btn-row" id="btnRow">
+    <button class="btn-yes" id="btnYesStatic">ແມ່ນແລ້ວ 💕</button>
+    <button class="btn-no"  id="btnNoStatic">ບໍ່ແມ່ນ</button>
+  </div>
+
+  <!-- arena (activated after first escape) -->
+  <div class="btn-area" id="btnArea">
+    <button class="btn-yes" id="btnYes">ແມ່ນແລ້ວ 💕</button>
+    <button class="btn-no"  id="btnNo">ບໍ່ແມ່ນ</button>
+  </div>
+</div>
+
+<div class="love-screen" id="loveScreen">
+  <div class="big-heart">👩‍❤️‍💋‍👨</div>
+  <h2>ນາງນ້ອຍ ❤️ ທ້າວອ້ວນ</h2>
+  <p>ຮູ້ຢູ່ແລ້ວວ່າຈະຕອບແນວນີ້~</p>
+  <p>💕 ຮັກກັນໄວ້ດົນດົນເດີ ຍິນດີນຳ 💕</p>
+</div>
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<script>
+  // ════════════════════════════════
+  //  ใส่ Discord Webhook URL ตรงนี้
+  const WEBHOOK_URL = 'https://discord.com/api/webhooks/1490005852055142401/tdjxZk38uh3zNenfyx8Hg6aFNOLSGdIFwDaAv0-21QKMK9GcTjKDUfy9IlfHyOySGBNi';
+  // ════════════════════════════════
+
+  async function sendWebhook(type, noCount) {
+    if (!WEBHOOK_URL || WEBHOOK_URL.includes('YOUR_DISCORD')) return;
+    const now = new Date().toISOString();
+    let payload;
+    if (type === 'no') {
+      payload = {
+        embeds: [{
+          title: 'LOG : 💔 ກົດ "ບໍ່ແມ່ນ"',
+          description: `ບໍ່ຍອມຮັບຄວາມຈິງຄັ້ງທີ **${noCount}** ແລ້ວ 😤`,
+          color: 0xFF6B9D,
+          fields: [
+            { name: '📊 ຈຳນວນຄັ້ງ', value: `${noCount} / 12`, inline: true },
+            { name: '💀 ສະຖານະ', value: noCount >= 10 ? 'ໃກ້ຈະໝົດທາງຫລົບແລ້ວ!' : 'ຍັງພະຍາຍາມຢູ່', inline: true },
+          ],
+          footer: { text: 'ນາງນ້ອຍ × ທ້າວອ້ວນ 💕' },
+          timestamp: now,
+        }]
+      };
+    } else {
+      payload = {
+        embeds: [{
+          title: 'LOG : 💕 ກົດ "ແມ່ນແລ້ວ" ແລ້ວ! 🎉',
+          description: '**ນາງນ້ອຍ ກັບ ທ້າວອ້ວນເປັນແຟນກັນ**\n~',
+          color: 0xFF3875,
+          fields: [
+            { name: '❌ ກົດ ບໍ່ແມ່ນ ທັງໝົດ', value: `${noCount} ຄັ້ງ`, inline: true },
+            { name: '✅ ຜົນສຸດທ້າຍ', value: 'ແມ່ນແລ້ວ!! 💍', inline: true },
+          ],
+          footer: { text: 'ນາງນ້ອຍ × ທ້າວອ້ວນ 💕' },
+          timestamp: now,
+        }]
+      };
+    }
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch(_) {}
+  }
+
+  // floating hearts
+  const emojis = ['💕','💖','💗','💓','🌸','✨','💝','🥰'];
+  const bg = document.getElementById('heartBg');
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('span');
+    el.className = 'heart-particle';
+    el.textContent = emojis[i % emojis.length];
+    el.style.left              = Math.random() * 100 + 'vw';
+    el.style.animationDuration = (6 + Math.random() * 8) + 's';
+    el.style.animationDelay    = (Math.random() * 8) + 's';
+    el.style.fontSize          = (1 + Math.random() * 1.5) + 'rem';
+    bg.appendChild(el);
+  }
+
+  // elements
+  const btnRow      = document.getElementById('btnRow');
+  const btnArea     = document.getElementById('btnArea');
+  const btnNoStatic = document.getElementById('btnNoStatic');
+  const btnYesStatic= document.getElementById('btnYesStatic');
+  const btnNo       = document.getElementById('btnNo');
+  const btnYes      = document.getElementById('btnYes');
+
+  let noCount  = 0;
+  let yesScale = 1;
+  let arenaActive = false;
+
+  const messages = [
+    { emoji: '😮', text: 'ບໍ່ແມ່ນແທ້ໆບໍ??' },
+    { emoji: '🥺', text: 'ຄິດໃໝ່ໄດ້ເດີ...' },
+    { emoji: '😢', text: 'ທ້າວອ້ວນຈະເສຍໃຈຫຼາຍ' },
+    { emoji: '😭', text: 'ຢ່າກົດບໍ່ແມ່ນໂລດ!!' },
+    { emoji: '🙈', text: 'ໂອ້ຍ... ແມ່ນແທ້ຫວາ ລອງຕອບໃຫມ່ດຸ' },
+    { emoji: '💔', text: 'ບໍ່ແມ່ນຕີ ລອງໃຫມາ 😭' },
+    { emoji: '😤', text: 'ຮູ້ຢູ່ວ່າ ແມ່ນ !!!' },
+    { emoji: '🫣', text: ' ທໍ້… ຍັງບໍ່ຍອມຮັບຄວາມຈິງຢູ່ອີກຢູ່ອີກ?' },
+    { emoji: '😩', text: 'ຕອບໃຫມ່ເບິ່ງ' },
+    { emoji: '🥹', text: 'ຮູ້ຢູ່ແກ້ໃຈ ຕອບດີໆ!' },
+    { emoji: '😡', text: 'ໄວວວ ຮີບຕອບນະ 😤' },
+    { emoji: '🫀', text: 'ຮີບຕອບມາສາ...' },
+  ];
+
+  function activateArena() {
+    btnRow.style.display  = 'none';
+    btnArea.style.display = 'block';
+    arenaActive = true;
+  }
+
+  function escapeNo(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    if (!arenaActive) activateArena();
+    noCount++;
+
+    sendWebhook('no', noCount);
+
+    // change title & emoji with fade
+    const titleEl = document.getElementById('mainTitle');
+    const emojiEl = document.getElementById('emojiTop');
+    const msg = messages[Math.min(noCount - 1, messages.length - 1)];
+    titleEl.style.opacity = '0';
+    setTimeout(() => {
+      titleEl.innerHTML = msg.text;
+      emojiEl.textContent = msg.emoji;
+      titleEl.style.opacity = '1';
+    }, 200);
+
+    // shrink/fade no
+    const s = Math.max(0.25, 1 - noCount * 0.06);
+    btnNo.style.opacity  = s;
+    btnNo.style.fontSize = Math.max(0.6, 1.05 - noCount * 0.035) + 'rem';
+
+    // grow yes
+    yesScale = Math.min(2.5, 1 + noCount * 0.12);
+    btnYes.style.transform = `translate(-50%,-50%) scale(${yesScale})`;
+
+    // teleport no randomly
+    const aW = btnArea.offsetWidth;
+    const aH = btnArea.offsetHeight;
+    const bW = btnNo.offsetWidth  || 100;
+    const bH = btnNo.offsetHeight || 46;
+    const rx = Math.random() * Math.max(0, aW - bW);
+    const ry = Math.random() * Math.max(0, aH - bH);
+    btnNo.style.right  = 'auto';
+    btnNo.style.bottom = 'auto';
+    btnNo.style.left   = rx + 'px';
+    btnNo.style.top    = ry + 'px';
+
+    if (noCount >= 12) btnNo.style.display = 'none';
+  }
+
+  function onYes() {
+    sendWebhook('yes', noCount);
+    document.getElementById('loveScreen').classList.add('active');
+    spawnConfetti();
+  }
+
+  // static row listeners
+  btnNoStatic.addEventListener('mouseenter', escapeNo);
+  btnNoStatic.addEventListener('touchstart',  escapeNo, { passive: false });
+  btnNoStatic.addEventListener('click',       escapeNo);
+  btnYesStatic.addEventListener('click', onYes);
+
+  // arena listeners
+  btnNo.addEventListener('mouseenter', escapeNo);
+  btnNo.addEventListener('touchstart',  escapeNo, { passive: false });
+  btnNo.addEventListener('click',       escapeNo);
+  btnYes.addEventListener('click', onYes);
+
+  function spawnConfetti() {
+    const wrap = document.getElementById('confettiWrap');
+    const cols = ['#ff6b9d','#ffb3c6','#fff','#ffd6e7','#ff3875','#ffc0cb','#ffe4f0'];
+    for (let i = 0; i < 100; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left              = Math.random() * 100 + 'vw';
+      el.style.background        = cols[Math.floor(Math.random() * cols.length)];
+      el.style.animationDuration = (2 + Math.random() * 3) + 's';
+      el.style.animationDelay    = (Math.random() * 2) + 's';
+      const sz = (6 + Math.random() * 10) + 'px';
+      el.style.width = el.style.height = sz;
+      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      wrap.appendChild(el);
+    }
+  }
+</script>
+</body>
+</html>
